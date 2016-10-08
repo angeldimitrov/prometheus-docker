@@ -1,0 +1,41 @@
+version: "2"
+services:
+
+#  snmp_exporter:
+#    build: ./snmp_exporter/
+#    ports:
+#      - "9116:9116"
+#    networks:
+#      monitoring:
+#        aliases:
+#          - snmp_exporter
+#    volumes:
+#      - "./snmp_exporter/snmp_exporter.yml:/etc/snmp_exporter.yml"
+  prometheus:
+    image: prom/prometheus:0.20.0
+    ports:
+      - "9090:9090"
+    networks:
+      monitoring:
+        aliases:
+          - prometheus
+    volumes:
+      - "./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
+
+  grafana:
+    image: grafana/grafana
+    networks:
+      - monitoring
+    ports:
+      - "3000:3000"
+
+  node_exporter:
+    image: prom/node-exporter
+    networks:
+      - monitoring
+    ports:
+      - "9100:9100"
+
+networks:
+  monitoring:
+    driver: bridge
